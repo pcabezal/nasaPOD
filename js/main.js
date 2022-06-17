@@ -48,23 +48,28 @@ function getFetch(){
         });
 }
 
-getFetch();
-
-stopButton.addEventListener('click', myStop)
-goButton.addEventListener('click', myStart)
-
 let myInterval;
 
 function myStart() {
     clearInterval(myInterval);
-    myInterval = setInterval(getFetch, timer)
+    getFetch();
+    myInterval = setInterval(getFetch, timer);
     goButton.removeEventListener('click', myStart);
+    goButton.style.opacity = "30%"
+    goButton.style.cursor = ""
+    stopButton.style.opacity = "87%"
+    stopButton.style.cursor= "pointer"
 }
 
 function myStop() {
-    clearInterval(myInterval)
-    goButton.addEventListener('click', myStart)
+    clearInterval(myInterval);
+    goButton.addEventListener('click', myStart);
+    stopButton.style.opacity = "30%"
+    stopButton.style.cursor= ""
+    goButton.style.opacity = "87%"
+    goButton.style.cursor = "pointer"
 }
 
 myStart();
 goButton.addEventListener('click', myStart)
+stopButton.addEventListener('click', myStop)
