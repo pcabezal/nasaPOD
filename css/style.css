@@ -17,7 +17,7 @@ html {
   font-size: 1vw;
   margin-right: 1vw;
   margin-left: 2vw;
-  opacity: 87%;
+  opacity: 90%;
 }
 
 .buttonContainer {
@@ -32,6 +32,7 @@ button {
   height: 7vh;
   padding: 1vmin;
   border-radius: 1vmin;
+  font-weight: 900;
 
 }
 
@@ -41,7 +42,6 @@ button {
 }
 
 .info {
-
   display: inline-block;
   width: 100%;
   height: 70vh;
@@ -49,7 +49,7 @@ button {
 
 .description {
   font-size: 1.75vmin;
-  opacity: 70%;
+  opacity: 75%;
 }
 
 .media {

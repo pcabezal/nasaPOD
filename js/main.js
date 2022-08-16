@@ -9,7 +9,22 @@ const goButton = document.querySelector('#go')
 function getDate(range, oneOrStartYear) { 
     temp = Math.floor(Math.random()*range) + oneOrStartYear;
     return (temp > 9) ? temp.toString() : `0` + temp;
-  }
+}
+
+
+const loadImage = src => 
+    new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+    });
+
+const updateText = (data) => {
+    datePlacer.innerText = data.date; 
+    titlePlacer.innerText = data.title;  
+    descriptionPlacer.innerText = data.explanation; 
+}     
 
 function getFetch(){
     year = getDate(26, 1997); // selects starting from 1997
@@ -24,21 +39,21 @@ function getFetch(){
         .then(data => {
             imagePlacer.style.display = 'none';
             videoPlacer.style.display = 'none';
-            datePlacer.innerText = data.date;
-            imagePlacer.title = ``;
             if (data.code == 400 || data.code == 404) {
                 getFetch();                
             } else if (data.media_type == 'image') {
                 imagePlacer.style.display = 'block';
-                imagePlacer.src = data.hdurl    
-                if (data.copyright) imagePlacer.title = `Copyright: ` + data.copyright;
+                loadImage(data.hdurl).then(image => {
+                    imagePlacer.title = ``;
+                    imagePlacer.src = data.hdurl 
+                    if (data.copyright) imagePlacer.title = `Copyright: ` + data.copyright;
+                    updateText(data);
+                });
             } else if (data.media_type == 'video') {
                 videoPlacer.style.display = 'block';
-                videoPlacer.src = data.url;          
+                videoPlacer.src = data.url; 
+                updateText(data);
             }   
-            titlePlacer.innerText = data.title;
-            descriptionPlacer.innerText = data.explanation; 
-            
         })
         .catch(err => {
             console.log(`error ${err}`);
@@ -48,26 +63,26 @@ function getFetch(){
 let myInterval;
 let timer = 10000;
 
-function myStart() {
+function startSlideshow() {
     clearInterval(myInterval);
     getFetch();
     myInterval = setInterval(getFetch, timer);
-    goButton.removeEventListener('click', myStart);
+    goButton.removeEventListener('click', startSlideshow);
     goButton.style.opacity = "30%";
     goButton.style.cursor = "";
     stopButton.style.opacity = "87%";
     stopButton.style.cursor= "pointer";
 }
 
-function myStop() {
+function stopSlideshow() {
     clearInterval(myInterval);
-    goButton.addEventListener('click', myStart);
+    goButton.addEventListener('click', startSlideshow);
     stopButton.style.opacity = "30%";
     stopButton.style.cursor= "";
     goButton.style.opacity = "87%";
     goButton.style.cursor = "pointer";
 }
 
-myStart();
-goButton.addEventListener('click', myStart);
-stopButton.addEventListener('click', myStop);
+startSlideshow();
+goButton.addEventListener('click', startSlideshow);
+stopButton.addEventListener('click', stopSlideshow);
